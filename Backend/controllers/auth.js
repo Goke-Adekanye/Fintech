@@ -35,7 +35,7 @@ const login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      res
+      return res
         .status(StatusCodes.UNAUTHORIZED)
         .json({ error: "Invalid email, Try again!" });
     }
@@ -43,7 +43,7 @@ const login = async (req, res) => {
     const isPasswordCorrect = await user.comparePassword(password);
 
     if (!isPasswordCorrect) {
-      res
+      return res
         .status(StatusCodes.UNAUTHORIZED)
         .json({ error: "Invalid password, Try again!" });
     }
