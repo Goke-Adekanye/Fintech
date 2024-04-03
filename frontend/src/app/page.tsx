@@ -1,7 +1,7 @@
 "use client";
 
-function Home () {
-    return <p>HOME</p>
+const Home = () => {
+    return <h1>HOME</h1>
 }
 
 export default Home;

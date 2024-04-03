@@ -8,7 +8,7 @@ import { errorHandler } from "@/src/app/utils/errorHandler"
 import { authUrl } from "@/src/app/utils/network";
 
 
-const Login = () => {
+const Signup = () => {
     const [loading, SetLoading] = useState(false);
     const Router = useRouter()
 
@@ -23,15 +23,15 @@ const Login = () => {
             password: formRef.current?.password.value,
         };
 
-        const response = await axios.post(authUrl.login, arg).catch((e: AxiosError) => errorHandler(e))
+        const response = await axios.post(authUrl.register, arg).catch((e: AxiosError) => errorHandler(e))
         SetLoading(false);
 
         if (response) {
-            Router.push("/");
+            Router.push("/login");
         }
     };
 
     return <Auth loading={loading} onSubmit={onSubmit} />;
 };
 
-export default Login;
+export default Signup;
