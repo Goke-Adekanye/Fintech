@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Auth from "@/src/app/components/Auth";
 import { errorHandler } from "@/src/app/utils/errorHandler";
 import { authUrl } from "@/src/app/utils/network";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [loading, SetLoading] = useState(false);
@@ -27,8 +28,12 @@ const Login = () => {
       .catch((e: AxiosError) => errorHandler(e));
     SetLoading(false);
 
-    if (response) {
-      Router.push("/");
+    if (response && response.data && response.data.token) {
+      toast("User created successfully", {
+        type: "success",
+      });
+      // Router.push("/");
+      console.log(response);
     }
   };
 

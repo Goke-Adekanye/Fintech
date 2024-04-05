@@ -56,19 +56,14 @@ const Auth: FC<AuthType> = ({
                 Open savings account
               </Link>
             </p>
-            <form>
+            <form ref={form} onSubmit={(e) => onSubmit(e, form)}>
               <div className="auth-inputs">
                 <div className="input-email">
                   <div className="flex items-center px-3 py-1 rounded-md bg-white">
                     <section className="mr-3">
                       <InputIcon changeIcon />
                     </section>
-                    <Input
-                      label="Username"
-                      name="email"
-                      type="email"
-                      required
-                    />
+                    <Input label="Email" name="email" type="email" required />
                   </div>
                 </div>
 
@@ -98,12 +93,18 @@ const Auth: FC<AuthType> = ({
               </div>
               <div className="auth-buttons">
                 <section className="auth-button__section">
-                  <button className="top-button">Sign in</button>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="top-button"
+                  >
+                    Sign in
+                  </button>
                 </section>
                 <section className="auth-button__section second">
-                  <button className="top-button">
+                  <Link href="/" className="top-button">
                     Register on internet banking
-                  </button>
+                  </Link>
                 </section>
               </div>
             </form>
