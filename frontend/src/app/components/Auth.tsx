@@ -1,7 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { FC, FormEvent, useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import src from "../assets/iphone.png";
+import srcLine from "../assets/lines.png";
 
 interface AuthType {
   title?: string;
@@ -69,13 +72,13 @@ const Auth: FC<AuthType> = ({
             </p>
             <p className="mb-6 text-xs">
               No account?{" "}
-              <Link className="auth-link text-xs font-bold" href="/sign-up">
+              <Link className="auth-link text-xs font-bold" href="/">
                 Open savings account
               </Link>
             </p>
             <form>
               <div className="auth-inputs">
-                <div>
+                <div className="input-email">
                   <div className="flex items-center px-3 py-1 rounded-md bg-white">
                     <section className="mr-3">
                       <svg
@@ -91,27 +94,107 @@ const Auth: FC<AuthType> = ({
                           r="4"
                           transform="matrix(-1 0 0 1 12 1)"
                           stroke="#B1B1B1"
-                          stroke-width="1.5"
+                          strokeWidth="1.5"
                         ></circle>
                         <path
                           d="M1 14.9347C1 14.0743 1.54085 13.3068 2.35109 13.0175V13.0175C6.00404 11.7128 9.99596 11.7128 13.6489 13.0175V13.0175C14.4591 13.3068 15 14.0743 15 14.9347V16.2502C15 17.4376 13.9483 18.3498 12.7728 18.1818L11.8184 18.0455C9.28565 17.6837 6.71435 17.6837 4.18162 18.0455L3.22721 18.1818C2.0517 18.3498 1 17.4376 1 16.2502V14.9347Z"
                           stroke="#B1B1B1"
-                          stroke-width="1.5"
+                          strokeWidth="1.5"
                         ></path>
                       </svg>
                     </section>
-                    <div className="input-div relative w-full">
+                    <div className="input-container one relative w-full">
                       <input
                         className="peer block w-full rounded-t-lg border-0 bg-inherit px-25 pb-25 pt-5 text-sm text-gray-900"
                         name="email"
+                        type="email"
+                        required
                       />
-                      <label className="">Username</label>
+                      <label className="input-label">Username</label>
                     </div>
                   </div>
                 </div>
+
+                <div className="input-password">
+                  <div className="flex items-center px-3 py-1 rounded-md bg-white">
+                    <section className="mr-3">
+                      <svg
+                        width="18"
+                        height="20"
+                        viewBox="0 0 18 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <rect
+                          x="1"
+                          y="7"
+                          width="16"
+                          height="12"
+                          rx="4"
+                          stroke="#B1B1B1"
+                          strokeWidth="1.5"
+                        ></rect>
+                        <path
+                          d="M9 14L9 12"
+                          stroke="#B1B1B1"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        ></path>
+                        <path
+                          d="M13 7V5C13 2.79086 11.2091 1 9 1V1C6.79086 1 5 2.79086 5 5L5 7"
+                          stroke="#B1B1B1"
+                          strokeWidth="1.5"
+                        ></path>
+                      </svg>
+                    </section>
+                    <div className="input-container two relative w-full">
+                      <input
+                        className="peer block w-full rounded-t-lg border-0 bg-inherit px-25 pb-25 pt-5 text-sm text-gray-900"
+                        name="password"
+                        type="password"
+                        required
+                      />
+                      <label className="input-label">Password</label>
+                    </div>
+                  </div>
+
+                  <Link
+                    className="text-xs auth-link hover:border-none"
+                    href="/"
+                  >
+                    <span className="mt-2 flex justify-end">
+                      {" "}
+                      Forgot Username or Password?
+                    </span>
+                  </Link>
+                </div>
+              </div>
+              <div className="auth-buttons">
+                <section className="auth-button__section">
+                  <button className="top-button">Sign in</button>
+                </section>
+                <section className="auth-button__section second">
+                  <button className="top-button">
+                    Register on internet banking
+                  </button>
+                </section>
               </div>
             </form>
           </div>
+        </div>
+
+        <div className="auth-section__second h-screen">
+          <div className="flex w-full items-center justify-center py-10">
+            <Image
+              width={333}
+              height={580}
+              src={src}
+              alt="banner"
+              className=""
+            />
+          </div>
+          <Image src={srcLine} alt="" className="line-image w-full" />
         </div>
       </section>
     </div>
