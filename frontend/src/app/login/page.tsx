@@ -27,9 +27,8 @@ const Login = () => {
       .catch((e: AxiosError) => errorHandler(e));
     SetLoading(false);
 
-    if (response?.data?.token) {
+    if (response?.data) {
       Router.push("/");
-      console.log(response);
     }
   };
 

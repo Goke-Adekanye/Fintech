@@ -9,9 +9,7 @@ const register = async (req, res) => {
     const emailExists = await User.findOne({ email });
 
     if (emailExists) {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        error: "Email is already in use. Please choose a different email.",
-      });
+      return res.status(StatusCodes.BAD_REQUEST).json("Email already in use!");
     }
 
     const newUser = await User.create({ ...req.body });
@@ -20,7 +18,7 @@ const register = async (req, res) => {
   } catch (error) {
     res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "Registration failed. Please try again." });
+      .json("Registration failed. Please try again.");
   }
 };
 
@@ -37,7 +35,7 @@ const login = async (req, res) => {
     if (!user) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ error: "Invalid email, Try again!" });
+        .json("Invalid email, Try again!");
     }
 
     const isPasswordCorrect = await user.comparePassword(password);
@@ -51,9 +49,7 @@ const login = async (req, res) => {
     const token = user.createJWT();
     res.status(StatusCodes.OK).json({ token });
   } catch (error) {
-    res.status(StatusCodes.UNAUTHORIZED).json({
-      error: "Login failed. Please check your credentials and try again.",
-    });
+    res.status(StatusCodes.UNAUTHORIZED).json("Login failed, Try again!");
   }
 };
 

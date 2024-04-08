@@ -30,12 +30,12 @@ const Signup = () => {
 
     const response = await axios
       .post(authUrl.register, arg)
-      .catch((e: AxiosError) => errorHandler(e));
+      .catch((e) => errorHandler(e.response?.data));
     SetLoading(false);
 
-    if (response?.data?.token) {
+    if (response?.data) {
       registerSuccess();
-      // Router.push("/login");
+      Router.push("/login");
     }
   };
 
