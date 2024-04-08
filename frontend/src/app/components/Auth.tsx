@@ -9,12 +9,11 @@ import { AccessLogo, InputIcon } from "./Icon";
 import Input from "./Input";
 
 interface AuthType {
-  title?: string;
   buttonTitle?: string;
   // showRemembered?: boolean;
   loading: boolean;
   accountInfoText?: {
-    initialText: string;
+    initialText?: string;
     actionText: string;
     actionLink: string;
   };
@@ -25,9 +24,12 @@ interface AuthType {
 }
 
 const Auth: FC<AuthType> = ({
-  title = "Log In",
-  buttonTitle = "Login",
-  accountInfoText,
+  buttonTitle = "Log In",
+  accountInfoText = {
+    initialText: "Have an Account?",
+    actionText: "Register on internet banking",
+    actionLink: "/sign-up",
+  },
   loading,
   onSubmit,
 }) => {
@@ -51,10 +53,15 @@ const Auth: FC<AuthType> = ({
               on register to get started
             </p>
             <p className="mb-6 text-xs">
-              No account?{" "}
-              <Link className="auth-link text-xs font-bold" href="/">
-                Open savings account
-              </Link>
+              {accountInfoText.initialText && (
+                <>
+                  <span>No account?</span>
+                  <Link className="auth-link text-xs font-bold" href="/sign-up">
+                    {" "}
+                    Open savings account
+                  </Link>
+                </>
+              )}
             </p>
             <form ref={form} onSubmit={(e) => onSubmit(e, form)}>
               <div className="auth-inputs">
@@ -98,12 +105,15 @@ const Auth: FC<AuthType> = ({
                     disabled={loading}
                     className="top-button"
                   >
-                    Sign in
+                    {buttonTitle} {loading && "..."}
                   </button>
                 </section>
                 <section className="auth-button__section second">
-                  <Link href="/" className="top-button">
-                    Register on internet banking
+                  <Link
+                    href={accountInfoText.actionLink}
+                    className="top-button"
+                  >
+                    {accountInfoText.actionText}
                   </Link>
                 </section>
               </div>

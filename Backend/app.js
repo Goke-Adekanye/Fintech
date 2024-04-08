@@ -1,36 +1,36 @@
 // Load environment variables from .env file
-require('dotenv').config();
+require("dotenv").config();
 
 // Enhance Express to handle async/await errors
-require('express-async-errors');
+require("express-async-errors");
 
 // Extra security packages
-const helmet = require('helmet'); // Set various HTTP headers for security
-const cors = require('cors'); // Enable Cross-Origin Resource Sharing
-const xss = require('xss-clean'); // Protect against cross-site scripting (XSS) attacks
-const rateLimiter = require('express-rate-limit'); // Implement rate limiting for requests
+const helmet = require("helmet"); // Set various HTTP headers for security
+const cors = require("cors"); // Enable Cross-Origin Resource Sharing
+const xss = require("xss-clean"); // Protect against cross-site scripting (XSS) attacks
+const rateLimiter = require("express-rate-limit"); // Implement rate limiting for requests
 
 // Swagger
-const swaggerUI = require('swagger-ui-express');
-const YAML = require('yamljs');
-const swaggerDocument = YAML.load('./swagger.yaml'); // Load Swagger documentation from YAML file
+const swaggerUI = require("swagger-ui-express");
+const YAML = require("yamljs");
+const swaggerDocument = YAML.load("./swagger.yaml"); // Load Swagger documentation from YAML file
 
-const express = require('express');
+const express = require("express");
 const app = express(); // Create an Express app
 
-const connectDB = require('./db/connect'); // Database connection function
-const authenticateUser = require('./middleware/authentication'); // Authentication middleware
+const connectDB = require("./db/connect"); // Database connection function
+const authenticateUser = require("./middleware/authentication"); // Authentication middleware
 
 // Routers
-const authRouter = require('./routes/auth'); // Authentication routes
-const jobsRouter = require('./routes/jobs'); // Jobs routes
+const authRouter = require("./routes/auth"); // Authentication routes
+const jobsRouter = require("./routes/jobs"); // Jobs routes
 
 // Error handler middleware
-const notFoundMiddleware = require('./middleware/not-found'); // Handle 404 Not Found errors
-const errorHandlerMiddleware = require('./middleware/error-handler'); // Handle general errors
+const notFoundMiddleware = require("./middleware/not-found"); // Handle 404 Not Found errors
+const errorHandlerMiddleware = require("./middleware/error-handler"); // Handle general errors
 
 // Set trust proxy and apply rate limiting
-app.set('trust proxy', 1);
+app.set("trust proxy", 1);
 app.use(
   rateLimiter({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -45,16 +45,16 @@ app.use(cors());
 app.use(xss());
 
 // Root route
-app.get('/', (req, res) => {
+app.get("/", (req, res) => {
   res.send('<h1>Jobs API</h1><a href="/api-docs">Documentation</a>');
 });
 
 // Serve Swagger UI at /api-docs
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 // Routes
-app.use('/api/v1/auth', authRouter); // Authentication routes
-app.use('/api/v1/jobs', authenticateUser, jobsRouter); // Jobs routes protected by authentication middleware
+app.use("/api/v1/auth", authRouter); // Authentication routes
+app.use("/api/v1/jobs", authenticateUser, jobsRouter); // Jobs routes protected by authentication middleware
 
 // Middleware for handling 404 Not Found errors
 app.use(notFoundMiddleware);
@@ -72,7 +72,9 @@ const start = async () => {
     await connectDB(process.env.MONGO_URI);
 
     // Listen on the specified port
-    app.listen(port, () => console.log(`Server is listening on port ${port}...`));
+    app.listen(port, () =>
+      console.log(`Server is listening on port ${port}...`)
+    );
   } catch (error) {
     console.log(error);
   }
