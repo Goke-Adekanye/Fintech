@@ -33,9 +33,9 @@ const Signup = () => {
       .catch((e: AxiosError) => errorHandler(e));
     SetLoading(false);
 
-    if (response) {
+    if (response?.data?.token) {
       registerSuccess();
-      Router.push("/login");
+      // Router.push("/login");
     }
   };
 

@@ -26,7 +26,7 @@ interface AuthType {
 const Auth: FC<AuthType> = ({
   buttonTitle = "Log In",
   accountInfoText = {
-    initialText: "Have an Account?",
+    initialText: "Open savings account",
     actionText: "Register on internet banking",
     actionLink: "/sign-up",
   },
@@ -58,7 +58,7 @@ const Auth: FC<AuthType> = ({
                   <span>No account?</span>
                   <Link className="auth-link text-xs font-bold" href="/sign-up">
                     {" "}
-                    Open savings account
+                    {accountInfoText.initialText}
                   </Link>
                 </>
               )}
