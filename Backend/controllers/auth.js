@@ -3,7 +3,7 @@ const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 
 const register = async (req, res) => {
-  const { email, phoneNo } = req.body;
+  const { email } = req.body;
 
   try {
     const emailExists = await User.findOne({ email });

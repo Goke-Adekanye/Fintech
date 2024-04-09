@@ -1,16 +1,19 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import Auth from "@/src/app/components/Auth";
-import { errorHandler } from "@/src/app/utils/errorHandler";
 import { authUrl } from "@/src/app/utils/network";
+import useFetchLogic from "../hooks/useFetchLogic";
 
 const Signup = () => {
-  const [loading, SetLoading] = useState(false);
+  const [emailInput, setEmailInput] = useState(false);
+  const [passwordInput, setPasswordInput] = useState(false);
+  const apiUrl = authUrl.register;
   const Router = useRouter();
+
+  const { post, loading, response } = useFetchLogic(apiUrl);
 
   const registerSuccess = () =>
     toast("User created successfully", {
@@ -22,20 +25,19 @@ const Signup = () => {
     formRef: React.RefObject<HTMLFormElement>
   ) => {
     e.preventDefault();
-    SetLoading(true);
     let arg = {
       email: formRef.current?.email.value,
       password: formRef.current?.password.value,
     };
 
-    const response = await axios
-      .post(authUrl.register, arg)
-      .catch((e) => errorHandler(e.response?.data));
-    SetLoading(false);
+    if (arg.email) setEmailInput(true);
+    if (arg.password) setPasswordInput(true);
+    post(arg);
 
-    if (response?.data) {
+    if (response) {
+      console.log(response);
       registerSuccess();
-      Router.push("/login");
+      // Router.push("/login");
     }
   };
 
@@ -49,6 +51,8 @@ const Signup = () => {
           actionLink: "/login",
           actionText: "Login internet banking",
         }}
+        emailInput={emailInput}
+        passwordInput={passwordInput}
       />
       <ToastContainer />
     </>
