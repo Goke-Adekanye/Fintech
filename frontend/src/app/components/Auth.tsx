@@ -21,8 +21,6 @@ interface AuthType {
     e: FormEvent<HTMLFormElement>,
     formRef: React.RefObject<HTMLFormElement>
   ) => void;
-  emailInput: boolean;
-  passwordInput: boolean;
 }
 
 const Auth: FC<AuthType> = ({

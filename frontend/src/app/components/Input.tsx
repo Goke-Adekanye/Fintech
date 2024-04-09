@@ -11,7 +11,7 @@ interface InputProps {
 
 const Input: React.FC<InputProps> = ({ label, name, type, required }) => {
   return (
-    <div className="input-container relative w-full">
+    <div className={`input-container email relative w-full`}>
       <input
         className="peer block w-full rounded-t-lg border-0 bg-inherit px-25 pb-25
         pt-5 text-sm text-gray-900"

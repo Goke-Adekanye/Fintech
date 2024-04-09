@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import Auth from "@/src/app/components/Auth";
@@ -8,8 +8,6 @@ import { authUrl } from "@/src/app/utils/network";
 import useFetchLogic from "../hooks/useFetchLogic";
 
 const Signup = () => {
-  const [emailInput, setEmailInput] = useState(false);
-  const [passwordInput, setPasswordInput] = useState(false);
   const apiUrl = authUrl.register;
   const Router = useRouter();
 
@@ -19,6 +17,15 @@ const Signup = () => {
     toast("User created successfully", {
       type: "success",
     });
+
+  useEffect(() => {
+    if (response) {
+      registerSuccess();
+      setTimeout(() => {
+        Router.push("/login");
+      }, 1000);
+    }
+  }, [Router, response]);
 
   const onSubmit = async (
     e: FormEvent<HTMLFormElement>,
@@ -30,15 +37,7 @@ const Signup = () => {
       password: formRef.current?.password.value,
     };
 
-    if (arg.email) setEmailInput(true);
-    if (arg.password) setPasswordInput(true);
     post(arg);
-
-    if (response) {
-      console.log(response);
-      registerSuccess();
-      // Router.push("/login");
-    }
   };
 
   return (
@@ -51,8 +50,6 @@ const Signup = () => {
           actionLink: "/login",
           actionText: "Login internet banking",
         }}
-        emailInput={emailInput}
-        passwordInput={passwordInput}
       />
       <ToastContainer />
     </>

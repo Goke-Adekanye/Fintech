@@ -12,8 +12,8 @@ var axiosInstance = axios.create({
 axiosInstance.defaults.headers.common["Content-Type"] = "application/json";
 axiosInstance.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 
-axiosInstance.defaults.headers.common["Authorization"] =
-  "Bearer " + localStorage.getItem(appConfig.tokenKey);
+// axiosInstance.defaults.headers.common["Authorization"] =
+//   "Bearer " + localStorage.getItem(appConfig.tokenKey);
 
 const auth = {
   get: axiosInstance.get,

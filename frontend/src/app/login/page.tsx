@@ -1,38 +1,42 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import Auth from "@/src/app/components/Auth";
-import { errorHandler } from "@/src/app/utils/errorHandler";
 import { authUrl } from "@/src/app/utils/network";
+import useFetchLogic from "../hooks/useFetchLogic";
+import { ToastContainer } from "react-toastify";
 
 const Login = () => {
-  const [loading, SetLoading] = useState(false);
   const Router = useRouter();
+  const apiUrl = authUrl.login;
+
+  const { post, loading, response } = useFetchLogic(apiUrl);
+
+  useEffect(() => {
+    if (response) Router.push("/");
+  }, [Router, response]);
 
   const onSubmit = async (
     e: FormEvent<HTMLFormElement>,
     formRef: React.RefObject<HTMLFormElement>
   ) => {
     e.preventDefault();
-    SetLoading(true);
     let arg = {
       email: formRef.current?.email.value,
       password: formRef.current?.password.value,
     };
 
-    const response = await axios
-      .post(authUrl.login, arg)
-      .catch((e: AxiosError) => errorHandler(e));
-    SetLoading(false);
-
-    if (response?.data) {
-      Router.push("/");
-    }
+    post(arg);
   };
 
-  return <Auth loading={loading} onSubmit={onSubmit} />;
+  return (
+    <>
+      <Auth loading={loading} onSubmit={onSubmit} />
+      <ToastContainer />
+    </>
+  );
 };
 
 export default Login;
