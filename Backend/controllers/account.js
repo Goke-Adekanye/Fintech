@@ -1,22 +1,10 @@
 const { StatusCodes } = require("http-status-codes");
 const Account = require("../models/Account");
+const { checkAccountLimit, checkExistingAccount } = require("../utils/utils");
 
 const map = {
   USD: "USD",
   NGN: "NGN",
-};
-
-const checkAccountLimit = async (userId) => {
-  const count = await Account.countDocuments({ user_id: userId });
-  return count < 2;
-};
-
-const checkExistingAccount = async (userId, currency) => {
-  const existingAccount = await Account.findOne({
-    user_id: userId,
-    currency: currency,
-  });
-  return existingAccount !== null;
 };
 
 const createAccount = async (req, res) => {
@@ -58,19 +46,15 @@ const createAccount = async (req, res) => {
   }
 };
 
-module.exports = { createAccount };
+const getUserAccounts = async (req, res) => {
+  const userId = req.user.userId;
 
-// return res
-// .status(StatusCodes.BAD_REQUEST)
-// .json("You already have an account with this currency");
+  try {
+    const accounts = await Account.find({ user_id: userId });
+    res.status(StatusCodes.OK).json(accounts);
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: err.message });
+  }
+};
 
-// const getUserAccounts = async (req, res) => {
-//   const jobs = await Job.find({ createdBy: req.user.userId }).sort("createdAt");
-//   res.status(StatusCodes.OK).json({ jobs, count: jobs.length });
-// };
-
-// const createAccount = async (req, res) => {
-//   req.body.createdBy = req.user.userId;
-//   const job = await Job.create(req.body);
-//   res.status(StatusCodes.CREATED).json({ job });
-// };
+module.exports = { createAccount, getUserAccounts };
