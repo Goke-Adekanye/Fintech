@@ -23,7 +23,7 @@ const authenticateUser = require("./middleware/authentication"); // Authenticati
 
 // Routers
 const authRouter = require("./routes/auth"); // Authentication routes
-const jobsRouter = require("./routes/jobs"); // Jobs routes
+const accountRouter = require("./routes/account"); // Jobs routes
 
 // Error handler middleware
 const notFoundMiddleware = require("./middleware/not-found"); // Handle 404 Not Found errors
@@ -53,8 +53,8 @@ app.get("/", (req, res) => {
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 // Routes
-app.use("/api/v1/auth", authRouter); // Authentication routes
-app.use("/api/v1/jobs", authenticateUser, jobsRouter); // Jobs routes protected by authentication middleware
+app.use("/api/v1/auth", authRouter); //
+app.use("/api/v1/account", authenticateUser, accountRouter); // Authenticated routes
 
 // Middleware for handling 404 Not Found errors
 app.use(notFoundMiddleware);
