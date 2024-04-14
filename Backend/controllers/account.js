@@ -1,6 +1,10 @@
 const { StatusCodes } = require("http-status-codes");
 const Account = require("../models/Account");
-const { checkAccountLimit, checkExistingAccount } = require("../utils/utils");
+const {
+  checkAccountLimit,
+  checkExistingAccount,
+  transferTx,
+} = require("../utils/utils");
 
 const map = {
   USD: "USD",
@@ -57,4 +61,50 @@ const getUserAccounts = async (req, res) => {
   }
 };
 
-module.exports = { createAccount, getUserAccounts };
+const transferFund = async (req, res) => {
+  const userId = req.user.userId;
+  const tr = req.body;
+
+  try {
+    const fromAccount = await Account.findById(tr.from_account_id);
+    if (!fromAccount) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: "Invalid Account" });
+    }
+
+    if (fromAccount.user_id.toString() !== userId) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: "Invalid Accounts" });
+    }
+
+    const toAccount = await Account.findById(tr.to_account_id);
+    if (!toAccount) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: "Recipient Account Not Found" });
+    }
+
+    if (toAccount.currency !== fromAccount.currency) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: "Account Currencies Mismatch" });
+    }
+
+    if (fromAccount.balance < tr.amount) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: "Insufficient balance" });
+    }
+
+    const response = await transferTx(tr);
+    res.status(StatusCodes.CREATED).json(response);
+  } catch (err) {
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Encountered issue with transaction" });
+  }
+};
+
+module.exports = { createAccount, getUserAccounts, transferFund };
