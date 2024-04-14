@@ -1,5 +1,5 @@
-const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
+const User = require("../models/User");
 const { BadRequestError } = require("../errors");
 
 const register = async (req, res) => {
