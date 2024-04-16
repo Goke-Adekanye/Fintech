@@ -18,6 +18,12 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please provide a password"],
       minlength: 6,
     },
+    username: {
+      type: String,
+      trim: true,
+      unique: true,
+      default: "",
+    },
   },
   { timestamps: true }
 );
