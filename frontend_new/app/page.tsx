@@ -30,7 +30,7 @@ const Home = () => {
             icon={<MdAccountBalance className="accountIcon" size={30} />}
             title="Accounting"
             linkTo="/accounting"
-            description="Manager account, send and receive money"
+            description="Manage account, send and receive money"
           />
         </div>
         {getModalContent(<UpdateUser closeModal={closeModal} />)}

@@ -6,8 +6,8 @@ import StoreProvider from "./components/StoreProvider";
 import ToastLayout from "./components/ToastLayout";
 
 export const metadata: Metadata = {
-  title: "Fingreat - Financial App",
-  description: "Fingreat - Financial App",
+  title: "Financial App",
+  description: "Fintech - Financial App",
 };
 
 export default function RootLayout({
