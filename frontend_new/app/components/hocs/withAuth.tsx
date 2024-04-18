@@ -4,6 +4,7 @@ import { userUrl } from "@/utils/network";
 import { ActionTypes, store } from "../StoreProvider";
 import useLogout from "../hooks/useLogout";
 import useAxiosHandler from "@/utils/axiosHandler";
+import Loader from "../Loader";
 
 export interface UserType {
   id: string;
@@ -54,7 +55,7 @@ const withAuth = <T extends Object>(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (checking) return <h3>LOADING... PLEASE WAIT</h3>;
+    if (checking) return <Loader />;
 
     return <WrapperComponent {...props} />;
   };

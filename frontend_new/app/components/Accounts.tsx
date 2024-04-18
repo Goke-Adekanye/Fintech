@@ -5,6 +5,7 @@ import { useModal } from "./hooks/useModal";
 import AddAccount from "./AddAccount";
 import SendMoney from "./SendMoney";
 import AddMoney from "./AddMoney";
+import Loader from "./Loader";
 
 export interface AccountType {
   id: string;
@@ -77,33 +78,35 @@ const Accounts = () => {
   };
 
   return (
-    <div className="section accounts">
-      <h3>Accounts</h3>
-      <div className="accountsBlock">
-        {loading && "Loading accounts"}
-        {accounts.map((account, index) => (
-          <AccountCard
-            key={index}
-            currency={account.currency}
-            amount={account.balance.toFixed(2).toString()}
-          />
-        ))}
-        <button onClick={addAccount} className="addAccount">
-          Add Account
-        </button>
-      </div>
+    <>
+      <div className="section accounts">
+        <h3>Accounts</h3>
+        <div className="accountsBlock">
+          {accounts.map((account, index) => (
+            <AccountCard
+              key={index}
+              currency={account.currency}
+              amount={account.balance.toFixed(2).toString()}
+            />
+          ))}
+          <button onClick={addAccount} className="addAccount">
+            Add Account
+          </button>
+        </div>
 
-      <div className="op-button">
-        {accounts.length > 0 && (
-          <>
-            <button onClick={addMoney}>Add Money</button>
-            <button onClick={sendMoney}>Send Money</button>
-          </>
-        )}
-      </div>
+        <div className="op-button">
+          {accounts.length > 0 && (
+            <>
+              <button onClick={addMoney}>Add Money</button>
+              <button onClick={sendMoney}>Send Money</button>
+            </>
+          )}
+        </div>
 
-      {getModalContent(comps[modalState])}
-    </div>
+        {getModalContent(comps[modalState])}
+      </div>
+      {loading && <Loader />}
+    </>
   );
 };
 

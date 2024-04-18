@@ -3,7 +3,8 @@ import { userTokenKey } from "./contants";
 import { errorHandler } from "./errorHandler";
 import useLogout from "@/app/components/hooks/useLogout";
 
-interface AxiosHandlerType {
+// Define the interface for the AxiosHandlerType
+interface AxiosHandlerType<T> {
   method: "GET" | "POST" | "PATCH";
   url: string;
   data?: { [key: string]: number | string };
@@ -11,21 +12,28 @@ interface AxiosHandlerType {
   isAuthorized?: boolean;
 }
 
+// Define the ResponseType interface
 interface ResponseType<T> {
   data?: T;
-  error: AxiosError | null;
+  error?: AxiosError | null;
 }
 
+// Define the useAxiosHandler hook
 const useAxiosHandler = () => {
   const { logout } = useLogout();
 
-  const axiosHandler = async <T>({
-    method,
-    url,
-    data,
-    isAuthorized,
-    handleError = true,
-  }: AxiosHandlerType): Promise<ResponseType<T>> => {
+  // Define the axiosHandler function
+  const axiosHandler = async <T>(
+    props: AxiosHandlerType<T>
+  ): Promise<ResponseType<T>> => {
+    const {
+      method,
+      url,
+      data,
+      isAuthorized = false,
+      handleError = true,
+    } = props;
+
     const config = {
       url,
       method,
