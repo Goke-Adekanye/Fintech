@@ -368,8 +368,14 @@ h1.title {
 }
 
 .modalDialog {
-  position: relative;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
   display: none;
+  position: fixed;
+  backdrop-filter: blur(3px);
+  z-index: 0;
 
   & .body {
     position: relative;
@@ -430,19 +436,7 @@ h1.title {
     }
   }
 
-  &::before {
-    backdrop-filter: blur(3px);
-    z-index: 0;
-    position: fixed;
-    content: "";
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-  }
-
   &.show {
-    /* display: block; */
     display: flex;
     align-items: center;
     justify-content: center;

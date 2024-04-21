@@ -1,4 +1,3 @@
-
 import { FormEvent, useContext, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { accountUrl } from "@/utils/network";
@@ -15,15 +14,15 @@ const SendMoney = ({ completeOperation, accounts }: SendMoneyType) => {
   const [loading, setLoading] = useState(false);
   const form = useRef<HTMLFormElement>(null);
   const { dispatch } = useContext(store);
-  const {axiosHandler} = useAxiosHandler()
+  const { axiosHandler } = useAxiosHandler();
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     let arg = {
-      from_account_id: parseInt(form.current?.from_account_id.value),
-      to_account_id: parseInt(form.current?.to_account_id.value),
-      amount: parseFloat(form.current?.amount.value),
+      from_account_id: form.current?.from_account_id.value.toString(),
+      to_account_id: form.current?.to_account_id.value.toString(),
+      amount: parseInt(form.current?.amount.value),
     };
 
     const res = await axiosHandler({
@@ -49,27 +48,27 @@ const SendMoney = ({ completeOperation, accounts }: SendMoneyType) => {
       <form ref={form} onSubmit={onSubmit}>
         <div className="modalBody userUpdate">
           <div className="formGroup">
-            <label htmlFor="Username">From Account</label>
+            <label htmlFor="from_account_id">From Account</label>
             <select name="from_account_id" required>
               <option value="">Select Account</option>
               {accounts.map((account, index) => (
-                <option key={index} value={account.id}>{`${
+                <option key={index} value={account._id}>{`${
                   account.currency
                 } - ${account.balance.toFixed(2)}`}</option>
               ))}
             </select>
           </div>
           <div className="formGroup">
-            <label htmlFor="Username">To Account</label>
+            <label htmlFor="to_account_id">To Account</label>
             <input
-              type="number"
+              type="text"
               name="to_account_id"
               placeholder="Specify the account to send to"
               required
             />
           </div>
           <div className="formGroup">
-            <label htmlFor="Username">Amount</label>
+            <label htmlFor="amount">Amount</label>
             <input name="amount" type="number" required />
           </div>
         </div>

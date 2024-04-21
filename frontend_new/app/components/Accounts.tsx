@@ -8,7 +8,7 @@ import AddMoney from "./AddMoney";
 import Loader from "./Loader";
 
 export interface AccountType {
-  id: string;
+  _id: string;
   balance: number;
   created_at: string;
   currency: string;
