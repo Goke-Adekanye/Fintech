@@ -1,11 +1,22 @@
 const { StatusCodes } = require("http-status-codes");
+const Joi = require("joi");
 const User = require("../models/User");
-const { BadRequestError } = require("../errors");
+const { validateRequestBody } = require("../utils/utils");
+
+const userSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(8).required(),
+});
 
 const register = async (req, res) => {
-  const { email } = req.body;
-
   try {
+    // Validate the request body
+    const validationError = validateRequestBody(userSchema, req.body);
+    if (validationError) {
+      return res.status(StatusCodes.BAD_REQUEST).json(validationError);
+    }
+
+    const { email } = req.body;
     const emailExists = await User.findOne({ email });
 
     if (emailExists) {
@@ -29,13 +40,15 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    throw new BadRequestError("Please provide both email and password");
-  }
-
   try {
+    // Validate the request body
+    const validationError = validateRequestBody(userSchema, req.body);
+    if (validationError) {
+      return res.status(StatusCodes.BAD_REQUEST).json(validationError);
+    }
+
+    const { email, password } = req.body;
+
     const user = await User.findOne({ email });
 
     if (!user) {

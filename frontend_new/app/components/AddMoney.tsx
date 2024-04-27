@@ -1,10 +1,9 @@
-import { FormEvent, useContext, useEffect, useRef, useState } from "react";
-import { toast } from "react-toastify";
-import { accountUrl } from "@/utils/network";
-import { store } from "./StoreProvider";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { AccountType } from "./Accounts";
 import useAxiosHandler from "@/utils/axiosHandler";
 import usePaystack, { Currency, MyPaystackProps } from "./hooks/usePaystack";
+import { accountUrl } from "@/utils/network";
+import { toast } from "react-toastify";
 
 interface AddMoneyType {
   completeOperation: () => void;
@@ -13,22 +12,23 @@ interface AddMoneyType {
 
 const AddMoney = ({ completeOperation, accounts }: AddMoneyType) => {
   const [loading, setLoading] = useState(false);
-  const form = useRef<HTMLFormElement>(null);
-  const { axiosHandler } = useAxiosHandler();
   const [data, setData] = useState<MyPaystackProps>({
     amount: 0,
     currency: "NGN",
   });
+  const form = useRef<HTMLFormElement>(null);
+  const { axiosHandler } = useAxiosHandler();
   const { initTransaction } = usePaystack({
     amount: data.amount,
     currency: data.currency,
   });
 
   const onComplete = async (response: any) => {
+    console.log(response);
     const arg = {
       reference: response.reference,
       status: response.status,
-      to_account_id: parseInt(form.current?.to_account_id.value),
+      to_account_id: form.current?.to_account_id.value.toString(),
       amount: data.amount,
     };
 
@@ -57,6 +57,7 @@ const AddMoney = ({ completeOperation, accounts }: AddMoneyType) => {
         setLoading(false);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -78,7 +79,7 @@ const AddMoney = ({ completeOperation, accounts }: AddMoneyType) => {
       <form ref={form} onSubmit={onSubmit}>
         <div className="modalBody userUpdate">
           <div className="formGroup">
-            <label htmlFor="Username">To Account</label>
+            <label htmlFor="to_account_id">To Account</label>
             <select name="to_account_id" required>
               <option value="">Select Account</option>
               {accounts.map((account, index) => (
@@ -89,7 +90,7 @@ const AddMoney = ({ completeOperation, accounts }: AddMoneyType) => {
             </select>
           </div>
           <div className="formGroup">
-            <label htmlFor="Username">Amount</label>
+            <label htmlFor="amount">Amount</label>
             <input name="amount" type="number" required />
           </div>
         </div>

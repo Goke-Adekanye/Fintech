@@ -113,7 +113,7 @@ const transferFund = async (req, res) => {
 const addMoney = async (req, res) => {
   const userId = req.user.userId;
 
-  const { to_account_id, amount, reference } = req.body;
+  const { to_account_id, amount, reference, status } = req.body;
 
   if (!to_account_id || !reference || !amount) {
     return res
@@ -141,7 +141,12 @@ const addMoney = async (req, res) => {
         .json({ error: "Unauthorized operation" });
     }
 
-    const moneyRecordArgs = { user_id: account.user_id, amount, reference };
+    const moneyRecordArgs = {
+      user_id: account.user_id,
+      reference,
+      status,
+      amount,
+    };
 
     await MoneyRecord.create(moneyRecordArgs);
 

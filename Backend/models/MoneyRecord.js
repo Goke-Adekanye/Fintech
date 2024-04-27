@@ -14,10 +14,10 @@ const moneyRecordSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["declined", "pending"],
+    // enum: ["declined", "success", "pending"],
     default: "pending",
     maxlength: 50,
-    // required: true,
+    required: true,
   },
   amount: {
     type: Number,
