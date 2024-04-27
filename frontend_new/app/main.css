@@ -377,6 +377,12 @@ h1.title {
   backdrop-filter: blur(3px);
   z-index: 0;
 
+  &.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   & .body {
     position: relative;
     background-color: white;
@@ -434,12 +440,6 @@ h1.title {
       margin: 0 auto;
       padding: 0 20px;
     }
-  }
-
-  &.show {
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 }
 

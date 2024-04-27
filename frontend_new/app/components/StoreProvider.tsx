@@ -6,13 +6,11 @@ import { UserType } from "./hocs/withAuth";
 // Define the interface for the store properties
 interface StoreProps {
   activeUser: UserType | null;
-  modalState: boolean;
 }
 
 // Initialize the store with default values
 const initialState: StoreProps = {
   activeUser: null,
-  modalState: false,
 };
 
 // Define the different types of actions that can be dispatched

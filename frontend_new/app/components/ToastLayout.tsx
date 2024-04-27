@@ -1,18 +1,8 @@
-'use client'
-
-import { useContext } from "react";
+"use client";
 import { ToastContainer } from "react-toastify";
-import { store } from "./StoreProvider";
 
 const ToastLayout = () => {
+  return <ToastContainer />;
+};
 
-    const {state:{modalState}} = useContext(store)
-
-    if(!modalState){
-        return <ToastContainer />
-    }
-
-    return null
-}
-
-export default ToastLayout
+export default ToastLayout;
