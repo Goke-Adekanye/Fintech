@@ -1,5 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const Account = require("../models/Account");
+const MoneyRecord = require("../models/MoneyRecord");
+const Entry = require("../models/Entry");
 const {
   checkAccountLimit,
   checkExistingAccount,
@@ -107,4 +109,58 @@ const transferFund = async (req, res) => {
   }
 };
 
-module.exports = { createAccount, getUserAccounts, transferFund };
+// Define Add-money function
+const addMoney = async (req, res) => {
+  const userId = req.user.userId;
+
+  const { to_account_id, amount, reference } = req.body;
+
+  if (!to_account_id || !reference || !amount) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: "Invalid inputs" });
+  }
+
+  // if (to_account_id === "" || reference === "" || amount === "") {
+  //   return res
+  //     .status(StatusCodes.BAD_REQUEST)
+  //     .json({ error: "All fields are required" });
+  // }
+
+  try {
+    const account = await Account.findById(to_account_id);
+    if (!account) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: "Account not found" });
+    }
+
+    if (account.user_id.toString() !== userId) {
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ error: "Unauthorized operation" });
+    }
+
+    const moneyRecordArgs = { user_id: account.user_id, amount, reference };
+
+    await MoneyRecord.create(moneyRecordArgs);
+
+    const entryArgs = { account_id: account._id, amount };
+    await Entry.create(entryArgs);
+
+    await Account.findByIdAndUpdate(account._id, { $inc: { balance: amount } });
+    res.status(StatusCodes.OK).json({ message: "Updated account balance" });
+  } catch (err) {
+    if (err.code === 11000) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: "Record with reference already exists" });
+    } else {
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ error: err.message });
+    }
+  }
+};
+
+module.exports = { createAccount, getUserAccounts, transferFund, addMoney };

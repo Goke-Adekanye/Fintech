@@ -42,20 +42,22 @@ const AddMoney = ({ completeOperation, accounts }: AddMoneyType) => {
     setLoading(false);
 
     if (res.data) {
-      form.current?.reset()
+      form.current?.reset();
       toast("Transaction successful", { type: "success" });
       completeOperation();
     }
   };
 
   useEffect(() => {
-    if(data.amount > 0){
-      const tmp:any = (res:any) => {
-        onComplete(res)
-      }
-      initTransaction(tmp, () => {setLoading(false)})
+    if (data.amount > 0) {
+      const tmp: any = (res: any) => {
+        onComplete(res);
+      };
+      initTransaction(tmp, () => {
+        setLoading(false);
+      });
     }
-  }, [data])
+  }, [data]);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -63,9 +65,9 @@ const AddMoney = ({ completeOperation, accounts }: AddMoneyType) => {
 
     const amount = parseFloat(form.current?.amount.value);
     const currency = accounts.find(
-      (account) => account.id.toString() === form.current?.to_account_id.value
+      (account) => account._id.toString() === form.current?.to_account_id.value
     )?.currency as unknown as Currency;
-    setData({amount, currency})
+    setData({ amount, currency });
   };
 
   return (
@@ -80,7 +82,7 @@ const AddMoney = ({ completeOperation, accounts }: AddMoneyType) => {
             <select name="to_account_id" required>
               <option value="">Select Account</option>
               {accounts.map((account, index) => (
-                <option key={index} value={account.id}>{`${
+                <option key={index} value={account._id}>{`${
                   account.currency
                 } - ${account.balance.toFixed(2)}`}</option>
               ))}
