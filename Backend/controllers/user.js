@@ -42,10 +42,12 @@ const updateUsername = async (req, res) => {
     ).select("-password");
 
     if (!user) {
-      return res.status(500).json({ error: "Error updating username" });
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ error: "Error updating username" });
     }
 
-    res.status(200).json(user);
+    res.status(StatusCodes.OK).json(user);
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: err.message });
   }
