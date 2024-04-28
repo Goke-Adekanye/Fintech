@@ -1,5 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const User = require("../models/User");
+const Joi = require("joi");
+const { validateRequestBody } = require("../utils/utils");
 
 const getLoggedInUser = async (req, res) => {
   const userId = req.user.userId;
@@ -18,16 +20,21 @@ const getLoggedInUser = async (req, res) => {
   }
 };
 
+const usernameSchema = Joi.object({
+  username: Joi.string().required(),
+});
+
 const updateUsername = async (req, res) => {
-  const userId = req.user.userId;
-
-  const { username } = req.body;
-
-  if (!username) {
-    return res.status(400).json({ error: "Username is required" });
-  }
-
   try {
+    // Validate the request body
+    const validationError = validateRequestBody(usernameSchema, req.body);
+    if (validationError) {
+      return res.status(StatusCodes.BAD_REQUEST).json(validationError);
+    }
+
+    const userId = req.user.userId;
+    const { username } = req.body;
+
     const user = await User.findByIdAndUpdate(
       userId,
       { username },

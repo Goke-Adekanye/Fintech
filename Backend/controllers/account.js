@@ -6,7 +6,9 @@ const {
   checkAccountLimit,
   checkExistingAccount,
   transferTx,
+  validateRequestBody,
 } = require("../utils/utils");
+const Joi = require("joi");
 
 const map = {
   USD: "USD",
@@ -109,25 +111,24 @@ const transferFund = async (req, res) => {
   }
 };
 
+const usernameSchema = Joi.object({
+  to_account_id: Joi.string().required(),
+  amount: Joi.number().required(),
+  reference: Joi.string().required(),
+});
+
 // Define Add-money function
 const addMoney = async (req, res) => {
-  const userId = req.user.userId;
-
-  const { to_account_id, amount, reference, status } = req.body;
-
-  if (!to_account_id || !reference || !amount) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: "Invalid inputs" });
-  }
-
-  // if (to_account_id === "" || reference === "" || amount === "") {
-  //   return res
-  //     .status(StatusCodes.BAD_REQUEST)
-  //     .json({ error: "All fields are required" });
-  // }
-
   try {
+    // Validate the request body
+    const validationError = validateRequestBody(usernameSchema, req.body);
+    if (validationError) {
+      return res.status(StatusCodes.BAD_REQUEST).json(validationError);
+    }
+
+    const userId = req.user.userId;
+    const { to_account_id, amount, reference, status } = req.body;
+
     const account = await Account.findById(to_account_id);
     if (!account) {
       return res
