@@ -18,7 +18,7 @@ const Register = () => {
   ) => {
     e.preventDefault();
     SetLoading(true);
-    let arg = {
+    const arg = {
       email: formRef.current?.email.value,
       password: formRef.current?.password.value,
     };
@@ -40,13 +40,12 @@ const Register = () => {
   return (
     <Auth
       onSubmit={onSubmit}
-      title="Sign Up"
       loading={loading}
       buttonTitle="Register"
       accountInfoText={{
         initialText: "Have an account?",
         actionLink: "/login",
-        actionText: "login",
+        actionText: "Login internet banking",
       }}
     />
   );

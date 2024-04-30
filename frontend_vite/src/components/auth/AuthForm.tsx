@@ -25,7 +25,7 @@ const Auth: FC<AuthType> = ({
   accountInfoText = {
     initialText: "Open savings account",
     actionText: "Register on internet banking",
-    actionLink: "/sign-up",
+    actionLink: "/signup",
   },
   loading,
   onSubmit,

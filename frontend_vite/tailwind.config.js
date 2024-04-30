@@ -22,7 +22,6 @@ export default {
       "default-text": "white",
       primary: "#4198FF",
       primary_hover: "#0941AE",
-      "label-color": "rgb(160 174 192)",
       "auth-button": "rgb(255 255 255)",
       "auth-button-two": "rgb(54 58 67)",
     },
