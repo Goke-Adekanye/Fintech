@@ -29,7 +29,9 @@ const updateUsername = async (req, res) => {
     // Validate the request body
     const validationError = validateRequestBody(usernameSchema, req.body);
     if (validationError) {
-      return res.status(StatusCodes.BAD_REQUEST).json(validationError);
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: validationError });
     }
 
     const userId = req.user.userId;
