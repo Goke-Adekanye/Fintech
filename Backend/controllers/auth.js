@@ -1,7 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const Joi = require("joi");
-const User = require("../models/User");
 const { validateRequestBody } = require("../utils/utils");
+const User = require("../models/User");
 
 const userSchema = Joi.object({
   email: Joi.string().email().required(),
@@ -13,14 +13,18 @@ const register = async (req, res) => {
     // Validate the request body
     const validationError = validateRequestBody(userSchema, req.body);
     if (validationError) {
-      return res.status(StatusCodes.BAD_REQUEST).json(validationError);
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: validationError });
     }
 
     const { email } = req.body;
     const emailExists = await User.findOne({ email });
 
     if (emailExists) {
-      return res.status(StatusCodes.BAD_REQUEST).json("Email already in use!");
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: "Email already in use!" });
     }
 
     const newUser = await User.create({ ...req.body });
@@ -35,7 +39,7 @@ const register = async (req, res) => {
   } catch (error) {
     res
       .status(StatusCodes.BAD_REQUEST)
-      .json("Registration failed. Please try again.");
+      .json({ error: "Registration failed. Please try again." });
   }
 };
 
@@ -44,7 +48,9 @@ const login = async (req, res) => {
     // Validate the request body
     const validationError = validateRequestBody(userSchema, req.body);
     if (validationError) {
-      return res.status(StatusCodes.BAD_REQUEST).json(validationError);
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: validationError });
     }
 
     const { email, password } = req.body;
@@ -54,7 +60,7 @@ const login = async (req, res) => {
     if (!user) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json("Invalid email, Try again!");
+        .json({ error: "Invalid email, Try again!" });
     }
 
     const isPasswordCorrect = await user.comparePassword(password);
@@ -62,13 +68,15 @@ const login = async (req, res) => {
     if (!isPasswordCorrect) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json("Invalid password, Try again!");
+        .json({ error: "Invalid password, Try again!" });
     }
 
     const token = user.createJWT();
     res.status(StatusCodes.OK).json({ token });
   } catch (error) {
-    res.status(StatusCodes.UNAUTHORIZED).json("Login failed, Try again!");
+    res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ error: "Login failed, Try again!" });
   }
 };
 

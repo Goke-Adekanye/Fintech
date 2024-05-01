@@ -23,19 +23,19 @@ const createAccount = async (req, res) => {
   if (!currency || !map[currency]) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "Please provide a valid currency" });
+      .json({ error: "Please provide a valid currency" });
   }
 
   if (!(await checkAccountLimit(req.user.userId))) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "Account limit exceeded" });
+      .json({ error: "Account limit exceeded" });
   }
 
   if (await checkExistingAccount(req.user.userId, currency)) {
     return res
       .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "You already have an account with this currency" });
+      .json({ error: "You already have an account with this currency" });
   }
 
   try {
@@ -45,12 +45,12 @@ const createAccount = async (req, res) => {
     if (err.code === 11000) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "You already have an account with this currency" });
+        .json({ error: "You already have an account with this currency" });
     }
 
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "An error occurred while creating the account" });
+      .json({ error: "An error occurred while creating the account" });
   }
 };
 
@@ -111,7 +111,7 @@ const transferFund = async (req, res) => {
   }
 };
 
-const usernameSchema = Joi.object({
+const addMoneySchema = Joi.object({
   to_account_id: Joi.string().required(),
   amount: Joi.number().required(),
   reference: Joi.string().required(),
@@ -121,9 +121,11 @@ const usernameSchema = Joi.object({
 const addMoney = async (req, res) => {
   try {
     // Validate the request body
-    const validationError = validateRequestBody(usernameSchema, req.body);
+    const validationError = validateRequestBody(addMoneySchema, req.body);
     if (validationError) {
-      return res.status(StatusCodes.BAD_REQUEST).json(validationError);
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: validationError });
     }
 
     const userId = req.user.userId;
