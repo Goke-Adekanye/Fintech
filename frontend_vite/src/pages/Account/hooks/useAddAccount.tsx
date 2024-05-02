@@ -45,7 +45,7 @@ const useAddAccount = () => {
     return (
       <Dialog open={dialogState}>
         <DialogTrigger onClick={() => setDialogState(true)}>
-          <Button>Add Account</Button>
+          <Button variant={"outline"}>Add Account</Button>
         </DialogTrigger>
         <DialogContent
           className="sm:max-w-[425px]"
@@ -75,7 +75,12 @@ const useAddAccount = () => {
               }}
             />
             <DialogFooter>
-              <Button disabled={loading} loading={loading} type="submit">
+              <Button
+                disabled={loading}
+                loading={loading}
+                variant={"secondary"}
+                type="submit"
+              >
                 Submit
               </Button>
             </DialogFooter>

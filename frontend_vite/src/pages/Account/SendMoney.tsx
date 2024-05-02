@@ -1,9 +1,10 @@
-import { useStore } from "@/components/hoc/StoreProvider";
+// import { useStore } from "@/components/hoc/StoreProvider";
 import useAxios from "@/components/hooks/useAxios";
 import { accountUrl } from "@/utils/network";
 import { FormEvent, useRef, useState } from "react";
 import { toast } from "sonner";
-import { AccountType } from "./Accounts";
+import { AccountType } from "@/utils/types";
+// import { AccountType } from "./Accounts";
 import {
   Dialog,
   DialogContent,
@@ -23,14 +24,14 @@ interface SendMoneyType {
 const SendMoney = ({ completeOperation, accounts, visible }: SendMoneyType) => {
   const [loading, setLoading] = useState(false);
   const form = useRef<HTMLFormElement>(null);
-  const { dispatch } = useStore();
+  // const { dispatch } = useStore();
   const { axiosHandler } = useAxios();
-  const [dialogState, setDialogState] = useState(false);
+  // const [dialogState, setDialogState] = useState(false);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    let arg = {
+    const arg = {
       from_account_id: parseInt(form.current?.from_account_id.value),
       to_account_id: parseInt(form.current?.to_account_id.value),
       amount: parseFloat(form.current?.amount.value),
@@ -102,7 +103,7 @@ const SendMoney = ({ completeOperation, accounts, visible }: SendMoneyType) => {
             </div>
           </div>
           <DialogFooter className="flex items-center justify-center p-4">
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} variant={"secondary"}>
               Submit{loading && "..."}
             </Button>
           </DialogFooter>

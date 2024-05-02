@@ -121,7 +121,7 @@ const useSendMoney = () => {
     return (
       <Dialog open={modalState}>
         <DialogTrigger onClick={() => setModalState(true)}>
-          <Button>Send Money</Button>
+          <Button variant={"outline"}>Send Money</Button>
         </DialogTrigger>
         <DialogContent customClose={closeModal}>
           <DialogHeader>
