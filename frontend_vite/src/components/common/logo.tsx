@@ -1,15 +1,5 @@
-import { cn } from "@/lib/utils";
+import { AccessLogo } from "./assets/llogo";
 
-type LogoProps = {
-    className?: string;
-}
-
-export const Logo = ({className=""}:LogoProps) => {
-    return <div className={
-        cn(
-            "text-white text-sm", className
-        )
-    }>
-        FINGREAT
-    </div>
-}
+export const Logo = () => {
+  return <AccessLogo />;
+};

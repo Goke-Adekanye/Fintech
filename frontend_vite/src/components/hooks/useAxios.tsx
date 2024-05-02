@@ -27,19 +27,22 @@ export default function useAxios() {
       data: data,
       ...config,
     }).catch((err) => {
+      // console.log(err);
       if (axios.isAxiosError(err) && err.response) {
         if (err.response.status === 401) {
           if (!localStorage.getItem(session_active)) {
             localStorage.setItem(session_active, "true");
             // Redirect to sign-in page
-            toast.error("Session expired. Please sign in again.");
+            const message = err.response.data.error;
+            toast.error(message);
+            // toast.error("Session expired. Please sign in again.");
             logout();
           }
         } else {
           const message =
             err.response.data.error ||
             "An error occurred while processing your request.";
-          toast.error(`Error: ${message}`);
+          toast.error(message);
         }
       } else {
         // Handle non-Axios errors
@@ -57,6 +60,7 @@ export default function useAxios() {
   }
 
   return {
-    axiosHandler, loading
+    axiosHandler,
+    loading,
   };
 }

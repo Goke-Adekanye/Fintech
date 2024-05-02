@@ -2,6 +2,19 @@ const Account = require("../models/Account");
 const Transfer = require("../models/Transfer");
 const Entry = require("../models/Entry");
 
+const Currencies = {
+  USD: {
+    Code: "USD",
+    Name: "United States Dollar",
+    Starter: "20",
+  },
+  NGN: {
+    Code: "NGN",
+    Name: "Nigerian Naira",
+    Starter: "10",
+  },
+};
+
 const checkAccountLimit = async (userId) => {
   const count = await Account.countDocuments({ user_id: userId });
   return count < 2;
@@ -63,9 +76,29 @@ const validateRequestBody = (schema, body) => {
   return null;
 };
 
+const generateAccountNumber = (currency) => {
+  const config = Currencies[currency];
+  if (!config) {
+    throw new Error("Currency not found");
+  }
+
+  const timestamp = Date.now(); // Get the current timestamp in milliseconds
+  const randomNumber = Math.floor(Math.random() * 10000); // Generate a random number between 0 and 9999
+
+  const initialValue = config.Starter;
+  const finalValue =
+    timestamp.toString().slice(-4) + randomNumber.toString().padStart(4, "0");
+
+  const accountNumber = initialValue + finalValue;
+  // console.log(accountNumber);
+  return accountNumber;
+};
+
 module.exports = {
   checkAccountLimit,
   checkExistingAccount,
   transferTx,
   validateRequestBody,
+  generateAccountNumber,
+  Currencies,
 };

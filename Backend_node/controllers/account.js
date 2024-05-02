@@ -7,20 +7,17 @@ const {
   checkExistingAccount,
   transferTx,
   validateRequestBody,
+  generateAccountNumber,
+  Currencies,
 } = require("../utils/utils");
 const Joi = require("joi");
-
-const map = {
-  USD: "USD",
-  NGN: "NGN",
-};
 
 const createAccount = async (req, res) => {
   req.body.user_id = req.user.userId;
 
   const { currency } = req.body;
 
-  if (!currency || !map[currency]) {
+  if (!currency || !Currencies[currency]) {
     return res
       .status(StatusCodes.BAD_REQUEST)
       .json({ error: "Please provide a valid currency" });
@@ -40,7 +37,23 @@ const createAccount = async (req, res) => {
 
   try {
     const account = await Account.create(req.body);
-    res.status(StatusCodes.CREATED).json({ account });
+    const account_no = await generateAccountNumber(account.currency);
+
+    const updatedAccount = await Account.findByIdAndUpdate(
+      account._id,
+      { account_no },
+      { new: true }
+    );
+
+    const formattedResponse = {
+      _id: updatedAccount._id,
+      user_id: updatedAccount.user_id,
+      account_no: updatedAccount.account_no,
+      currency: updatedAccount.currency,
+      balance: updatedAccount.balance,
+      createdAt: updatedAccount.createdAt,
+    };
+    res.status(StatusCodes.CREATED).json({ account: formattedResponse });
   } catch (err) {
     if (err.code === 11000) {
       return res

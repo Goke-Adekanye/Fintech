@@ -70,7 +70,6 @@ const login = async (req, res) => {
         .status(StatusCodes.UNAUTHORIZED)
         .json({ error: "Invalid password, Try again!" });
     }
-
     const token = user.createJWT();
     res.status(StatusCodes.OK).json({ token });
   } catch (error) {
