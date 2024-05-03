@@ -40,10 +40,12 @@ const Accounts = ({ updateDefaultAccount }: props) => {
 
   useEffect(() => {
     getAccounts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (accounts.length > 0) updateDefaultAccount(accounts[defaultAccount]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accounts, defaultAccount]);
 
   const completeOperation = () => {

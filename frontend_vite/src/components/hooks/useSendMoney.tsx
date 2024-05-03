@@ -24,10 +24,10 @@ const useSendMoney = () => {
     state: { activeUser },
   } = useStore();
   const [data, setData] = useState<{
-    accountNumber: string;
+    account_no: string;
     amount: string;
   }>({
-    accountNumber: "",
+    account_no: "",
     amount: "",
   });
   const [account, setAccount] = useState<AccountType | null>(null);
@@ -47,13 +47,14 @@ const useSendMoney = () => {
       accountUrl.verifyAccountNumber,
       "post",
       {
-        account_number: data.accountNumber,
+        account_no: data.account_no,
       },
       true
     );
 
     if (res) {
-      if (res.user_id === activeUser?.id) {
+      console.log(res, account);
+      if (res.user_id === activeUser?._id) {
         return toast.error("You can't send money to yourself");
       }
 
@@ -66,7 +67,7 @@ const useSendMoney = () => {
   };
 
   const trackAccountNumberChanges = () => {
-    if (data.accountNumber.length === 10) {
+    if (data.account_no.length === 10) {
       inputRef.current?.blur();
       setVerifiedAccount(null);
       verifyAccountNumber();
@@ -76,7 +77,7 @@ const useSendMoney = () => {
   const closeModal = () => {
     setModalState(false);
     setData({
-      accountNumber: "",
+      account_no: "",
       amount: "",
     });
     setAccount(null);
@@ -85,7 +86,8 @@ const useSendMoney = () => {
 
   useEffect(() => {
     trackAccountNumberChanges();
-  }, [data.accountNumber]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.account_no]);
 
   const onAccountSelect = (accounts: AccountType[], key: string) => {
     const account = accounts.find(
@@ -102,9 +104,9 @@ const useSendMoney = () => {
 
   const confirmPayment = async (onComplete: () => void) => {
     const payload = {
-      to_account_number: data.accountNumber,
+      to_account_number: data.account_no,
       amount: parseFloat(data.amount),
-      from_account_id: account?.id,
+      from_account_id: account?._id,
     };
 
     const res = await axiosHandler(accountUrl.transfer, "post", payload, true);
@@ -156,8 +158,8 @@ const useSendMoney = () => {
                 <LabelInput
                   labelProps={{ children: "Account Number" }}
                   inputProps={{
-                    name: "accountNumber",
-                    value: data.accountNumber,
+                    name: "account_no",
+                    value: data.account_no,
                     onChange: handleChange,
                     ref: inputRef,
                   }}
@@ -190,6 +192,7 @@ const useSendMoney = () => {
                 className="mt-7 w-full"
                 disabled={loading || !data.amount}
                 loading={loading}
+                variant={"secondary"}
               >
                 Send
               </Button>

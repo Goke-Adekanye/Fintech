@@ -1,5 +1,5 @@
 export interface UserType {
-  id: string;
+  _id: string;
   created_at: string;
   updated_at: string;
   email: string;
@@ -11,7 +11,7 @@ export type SignInResponseType = {
 };
 
 export type keyValuePair = {
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 export type SelectItemsType = keyValuePair & {
@@ -20,12 +20,12 @@ export type SelectItemsType = keyValuePair & {
 };
 
 export interface AccountType {
-  id: string;
+  _id: string;
   balance: number;
   amount?: string;
   created_at: string;
   currency: string;
-  account_number: string;
+  account_no: string;
 }
 
 export interface VerifyAccountType extends AccountType {
