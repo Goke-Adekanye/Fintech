@@ -11,7 +11,7 @@ export type SignInResponseType = {
 };
 
 export type keyValuePair = {
-  [key: string]: unknown;
+  [key: string]: any;
 };
 
 export type SelectItemsType = keyValuePair & {

@@ -14,12 +14,15 @@ const Home = () => {
     if (!activeUser?.username) {
       setDialogState(true);
     }
-  }, []);
+  }, [activeUser?.username, setDialogState]);
   return (
     <MainLayout>
       <main>
         <h1 className="text-4xl font-extralight mt-7">
-          Welcome, <span className="font-normal capitalize">{activeUser?.username || "user"}</span>
+          Welcome,{" "}
+          <span className="font-normal capitalize">
+            {activeUser?.username || "user"}
+          </span>
         </h1>
         <div className="mt-10 grid grid-cols-3 gap-2">
           <ProcessCard

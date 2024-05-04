@@ -6,6 +6,7 @@ type props = {
   toAccount: VerifyAccountType;
   fromAccount: AccountType;
   amount: string;
+  loading?: boolean;
   onComplete: () => void;
 };
 
@@ -22,6 +23,7 @@ const SendMoneyConfirmation = ({
   toAccount,
   fromAccount,
   amount,
+  loading,
   onComplete,
 }: props) => {
   return (
@@ -31,8 +33,13 @@ const SendMoneyConfirmation = ({
       <ContextViewer title="To Account Identifier" info={toAccount.email} />
       <ContextViewer title="To Account Currency" info={toAccount.currency} />
       <ContextViewer title="Amount" info={formatCurrency(amount)} />
-      <Button onClick={onComplete} className="w-full" variant={"outline"}>
-        Confirm
+      <Button
+        onClick={onComplete}
+        className="w-full"
+        variant={"outline"}
+        disabled={loading}
+      >
+        {loading ? "Sending... Please wait!" : "Confirm"}
       </Button>
     </div>
   );

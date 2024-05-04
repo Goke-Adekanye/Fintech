@@ -2,6 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const Account = require("../models/Account");
 const MoneyRecord = require("../models/MoneyRecord");
 const Entry = require("../models/Entry");
+const User = require("../models/User");
 const {
   checkAccountLimit,
   checkExistingAccount,
@@ -78,11 +79,25 @@ const getUserAccounts = async (req, res) => {
   }
 };
 
-const transferFund = async (req, res) => {
-  const userId = req.user.userId;
-  const tr = req.body;
+const sendMoneySchema = Joi.object({
+  from_account_id: Joi.string().required(),
+  to_account_no: Joi.number().required(),
+  amount: Joi.number().required(),
+});
 
+const transferFund = async (req, res) => {
   try {
+    // Validate the request body
+    const validationError = validateRequestBody(sendMoneySchema, req.body);
+    if (validationError) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: validationError });
+    }
+
+    const userId = req.user.userId;
+    const tr = req.body;
+
     const fromAccount = await Account.findById(tr.from_account_id);
     if (!fromAccount) {
       return res
@@ -93,15 +108,17 @@ const transferFund = async (req, res) => {
     if (fromAccount.user_id.toString() !== userId) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .json({ error: "Invalid Accounts" });
+        .json({ error: "Unauthorized Transaction" });
     }
 
-    const toAccount = await Account.findById(tr.to_account_id);
+    const toAccount = await Account.findOne({ account_no: tr.to_account_no });
     if (!toAccount) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ error: "Recipient Account Not Found" });
     }
+    // console.log(toAccount);
+    // console.log(fromAccount);
 
     if (toAccount.currency !== fromAccount.currency) {
       return res
@@ -115,7 +132,13 @@ const transferFund = async (req, res) => {
         .json({ error: "Insufficient balance" });
     }
 
-    const response = await transferTx(tr);
+    let txArg = {
+      from_account_id: tr.from_account_id,
+      to_account_id: toAccount._id,
+      amount: tr.amount,
+    };
+
+    const response = await transferTx(txArg);
     res.status(StatusCodes.CREATED).json(response);
   } catch (err) {
     return res
@@ -128,6 +151,7 @@ const addMoneySchema = Joi.object({
   to_account_id: Joi.string().required(),
   amount: Joi.number().required(),
   reference: Joi.string().required(),
+  status: Joi.string(),
 });
 
 // Define Add-money function
@@ -184,4 +208,62 @@ const addMoney = async (req, res) => {
   }
 };
 
-module.exports = { createAccount, getUserAccounts, transferFund, addMoney };
+// Define the schema for the request body
+const GetAccountByAccountNoSchema = Joi.object({
+  account_no: Joi.number().required(),
+});
+
+// Define the function to get an account by account number
+const getAccountByAccountNumber = async (req, res) => {
+  try {
+    // Validate the request body
+    const validationError = validateRequestBody(
+      GetAccountByAccountNoSchema,
+      req.body
+    );
+    if (validationError) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: validationError });
+    }
+
+    // const userId = req.user.userId;
+    const { account_no } = req.body;
+
+    const account = await Account.findOne({ account_no });
+
+    if (!account) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: "Couldn't get account" });
+    }
+
+    const { user_id } = account;
+    const accountOwner = await User.findById({ _id: user_id });
+
+    // Format the response
+    const formattedResponse = {
+      _id: account._id,
+      user_id: account.user_id,
+      account_no: account.account_no,
+      currency: account.currency,
+      balance: account.balance,
+      email: accountOwner.email,
+      createdAt: account.createdAt,
+    };
+
+    return res.status(StatusCodes.OK).json(formattedResponse);
+  } catch (err) {
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message });
+  }
+};
+
+module.exports = {
+  createAccount,
+  getUserAccounts,
+  transferFund,
+  addMoney,
+  getAccountByAccountNumber,
+};

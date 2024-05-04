@@ -35,6 +35,8 @@ const useAddMoney = () => {
       amount,
     };
 
+    console.log(arg);
+
     const res = await axiosHandler(accountUrl.addMoney, "POST", arg, true);
 
     if (res) {
@@ -55,7 +57,7 @@ const useAddMoney = () => {
     const account_currency = form.current?.from_account_id.value;
     const account = accounts.find(
       (account) => account.currency === account_currency
-    )
+    );
 
     if (!account) {
       toast.error("Invalid account selected");
@@ -63,10 +65,10 @@ const useAddMoney = () => {
     }
 
     const tmp: any = (res: any) => {
-        onComplete(res, amount, account.id, _onComplete);
-      };
-      getInitTransaction(amount, account.currency as Currency, tmp);
-      setShowDialog(false);
+      onComplete(res, amount, account._id, _onComplete);
+    };
+    getInitTransaction(amount, account.currency as Currency, tmp);
+    setShowDialog(false);
   };
 
   const getAddMoney = (accounts: AccountType[], onComplete: () => void) => {
@@ -80,7 +82,10 @@ const useAddMoney = () => {
             Add Money
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]" customClose={() => setShowDialog(false)}>
+        <DialogContent
+          className="sm:max-w-[425px]"
+          customClose={() => setShowDialog(false)}
+        >
           <DialogHeader>
             <DialogTitle>Add Money</DialogTitle>
           </DialogHeader>
@@ -111,7 +116,12 @@ const useAddMoney = () => {
             />
 
             <DialogFooter className="flex items-center justify-center">
-              <Button type="submit" disabled={loading} loading={loading}>
+              <Button
+                type="submit"
+                disabled={loading}
+                loading={loading}
+                variant={"secondary"}
+              >
                 Submit
               </Button>
             </DialogFooter>

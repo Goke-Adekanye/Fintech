@@ -104,9 +104,9 @@ const useSendMoney = () => {
 
   const confirmPayment = async (onComplete: () => void) => {
     const payload = {
-      to_account_number: data.account_no,
-      amount: parseFloat(data.amount),
       from_account_id: account?._id,
+      to_account_no: data.account_no,
+      amount: parseFloat(data.amount),
     };
 
     const res = await axiosHandler(accountUrl.transfer, "post", payload, true);
@@ -204,6 +204,7 @@ const useSendMoney = () => {
               toAccount={verifiedAccount as VerifyAccountType}
               fromAccount={account as AccountType}
               amount={data.amount}
+              loading={loading}
               onComplete={() => confirmPayment(onComplete)}
             />
           )}
