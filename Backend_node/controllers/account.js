@@ -260,10 +260,50 @@ const getAccountByAccountNumber = async (req, res) => {
   }
 };
 
+const getTransactionSchema = Joi.object({
+  account_id: Joi.string().required(),
+});
+
+const getTransactions = async (req, res) => {
+  try {
+    // Validate the request body
+    const validationError = validateRequestBody(getTransactionSchema, req.body);
+    if (validationError) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: validationError });
+    }
+
+    const userId = req.user.userId;
+    const { account_id } = req.body;
+
+    const account = await Account.findById(account_id);
+    if (!account) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: "Account not found" });
+    }
+
+    if (account.user_id.toString() !== userId) {
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ error: "Unauthorized operation" });
+    }
+
+    const transactions = await Entry.find({ account_id });
+    res.status(StatusCodes.OK).json(transactions);
+  } catch (err) {
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message });
+  }
+};
+
 module.exports = {
   createAccount,
   getUserAccounts,
   transferFund,
   addMoney,
   getAccountByAccountNumber,
+  getTransactions,
 };

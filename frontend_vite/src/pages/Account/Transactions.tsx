@@ -20,7 +20,7 @@ const Transaction = ({ account }: props) => {
     const res = await axiosHandler<TransactionType[]>(
       accountUrl.transactions,
       "POST",
-      { account_id: account.id },
+      { account_id: account._id },
       true
     );
     setLoading(false);
