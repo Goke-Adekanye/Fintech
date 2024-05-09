@@ -15,6 +15,6 @@ router.route("/").get(getUserAccounts);
 router.route("/transfer").post(transferFund);
 router.route("/add-money").post(addMoney);
 router.route("/get-account-by-number").post(getAccountByAccountNumber);
-router.route("/transactions").get(getTransactions);
+router.route("/transactions").post(getTransactions);
 
 module.exports = router;

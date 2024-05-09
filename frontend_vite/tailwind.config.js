@@ -29,6 +29,8 @@ export default {
       "auth-bg": "rgb(255 255 255)",
       "auth-link": "rgb(255 130 0)",
       "auth-section": "rgb(245 247 248)",
+      "trans-credit": "rgb(134 239 172)",
+      "trans-debit": "rgb(252 165 165)",
     },
     boxShadow: {
       "button-shadow":

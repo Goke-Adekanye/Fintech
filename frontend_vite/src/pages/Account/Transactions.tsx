@@ -1,6 +1,7 @@
+import { useEffect, useState } from "react";
+import moment from "moment";
 import { AccountType, TransactionType } from "@/utils/types";
 import TransactionTable from "../../components/common/myTable";
-import { useEffect, useState } from "react";
 import useAxios from "@/components/hooks/useAxios";
 import { accountUrl } from "@/utils/network";
 import LoadingSpinner from "@/components/common/loadingSpinner";
@@ -32,6 +33,7 @@ const Transaction = ({ account }: props) => {
   useEffect(() => {
     setLoading(true);
     getTransactions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account]);
 
   const getTransactionList = () => {
@@ -39,14 +41,15 @@ const Transaction = ({ account }: props) => {
     for (const transaction of transactions) {
       const _type =
         transaction.amount > 0 ? (
-          <Badge className="bg-green-500">CR</Badge>
+          <Badge className="bg-trans-credit">CR</Badge>
         ) : (
-          <Badge className="bg-red-500">DR</Badge>
+          <Badge className="bg-trans-debit">DR</Badge>
         );
       result.push([
         _type,
         formatCurrency(transaction.amount.toString()),
-        transaction.created_at,
+        // formatDate(transaction.created_at),
+        moment(transaction.created_at).format("MMMM Do YYYY, h:mm:ss a"),
       ]);
     }
     return result;
@@ -56,11 +59,11 @@ const Transaction = ({ account }: props) => {
     <div className="mt-10">
       <h1 className="text-2xl font-light mb-5">Transaction History</h1>
       {loading ? (
-        <LoadingSpinner className="text-orange-500" />
+        <LoadingSpinner className="text-blueGray-500" />
       ) : (
         <TransactionTable
           body={getTransactionList()}
-          heading={["Type", "Amount", "Created_at"]}
+          heading={["Type", "Amount", "Time"]}
         />
       )}
     </div>

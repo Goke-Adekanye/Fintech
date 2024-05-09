@@ -290,7 +290,9 @@ const getTransactions = async (req, res) => {
         .json({ error: "Unauthorized operation" });
     }
 
-    const transactions = await Entry.find({ account_id });
+    const transactions = await Entry.find({ account_id })
+      .sort({ created_at: -1 })
+      .limit(10);
     res.status(StatusCodes.OK).json(transactions);
   } catch (err) {
     return res
